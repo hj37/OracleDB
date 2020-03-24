@@ -1,4 +1,4 @@
-package sec01.ex01;
+package sec01.ex02;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -13,8 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 
 //서블릿 
 //웹브라우저 주소창에......
-//http://localhost:8080/pro08/member로 모든 회원정보를 조회해줘 ~라고 요청이 들어오면...
-@WebServlet("/member")
+//http://localhost:8080/pro08/member2로 모든 회원정보를 조회해줘 ~라고 요청이 들어오면...
+@WebServlet("/member2")
 public class MemberServlet extends HttpServlet{
 
 	@Override
@@ -47,10 +47,10 @@ public class MemberServlet extends HttpServlet{
 			//ArrayLsit가변길이 배열에 저장된 검색한 회원정보(MemberVO객체)를 하나씩 얻는다.
 			
 			/*	//업캐스팅 : 부모클래스 타입의 참조변수에 자식객체를 저장하는 것!
-			 * //업캐스팅 Object obj = list.get(i); //new MemberVO(); 
-			 * //다운캐스팅 MemberVO memberVO 자식클래스타입의 참조변수로 형변환(캐스팅) 해주어야함.
-			 * = (MemberVO)obj;
-			 * MemberVO memberVO = (MemberVO)list.get(i);
+			 * //업캐스팅 Object obj = list.get(i); 
+			 * //다운캐스팅  자식클래스타입의 참조변수로 형변환(캐스팅) 해주어야함.
+			 * MemberVO memberVO = (MemberVO)obj;
+			 * MemberVO memberVO = (MemberVO)list.get(i);	//get(i) Object타입이 무조건 반환이 됨 
 			 * 다형성(다양한 형태의 성질을 지닐 수 있는 것) 
 			 * 메소드 오버로딩 : 하나의 같은 이름으로 매개변수 개수 또는 타입을 달리해서 메소드를 여러개 만들어 놓는것 
 			 * 메소드 오버라이딩 : 메소드 선언부는 같게 하되 구현부만 재구현해서 여러개의 메소드를 만들 수 있다.

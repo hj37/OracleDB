@@ -1,6 +1,10 @@
-package sec01.ex01;
+package sec01.ex02;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.Date;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 
 //데이터베이스 연결 및 데이터베이스 작업(insert, select,delete,update 등등) 
@@ -27,8 +31,13 @@ public class MemberDAO {
 	private Connection con;
 
 	// DB와 접속 후 우리가 만든 SQL문을 생성 후 실행할 실행객체를 담을 변수 선언
-	private Statement stmt;
-
+	/*
+	 * private Statement stmt;
+	 */
+	
+	//Statement인터페이스를 구현한 자식객체를 저장하는 대신에 
+	//PreparedStatement인터페이스를 구현한 자식객체를 저장할 용도의 변수 선언 
+	private PreparedStatement pstmt;
 	private void connDB() {
 
 		try {
@@ -43,8 +52,16 @@ public class MemberDAO {
 			con = DriverManager.getConnection(url, user, pwd);	//DB접속 
 
 			// 4.Statement객체 얻기(SQL문을 오라클 DB의 테이블에 전달하여 실행할 객체 얻기)
-			stmt = con.createStatement();
-		} catch (Exception e) {
+			/*
+			 * stmt = con.createStatement();
+			 * PreparedStatement인터페이스를 구현한 OraclePreparedStatementWrapper객체 얻기 
+			 *
+			 */
+			//PreparedStatement인터페이스를 구현한 OraclePreparedStatementWrapper객체 얻기 
+			// -> connection 객체의 preparedStatement() 메소드 호출시..
+			// -> DB에 실행할 SQL문을 전달하여... SQL문을 미리 로드한 OraclePreparedStatementWrapper객체 얻기 
+			//pstmt = con.prepareStatement("select * from t_member");
+			} catch (Exception e) {
 			System.out.println("드라이버 로딩 실패 또는 DB접속 실패");
 		}
 	}// connDB메소드 닿는 부분
@@ -61,10 +78,15 @@ public class MemberDAO {
 		//5.Query작성하기 
 		String query ="select * from t_member";
 		
+		//4. Connection객체의 PreparedStatement()메소드 호출시 ...SQL문을 전달해 
+		//미리 로딩한 OraclePreparedStatementWrapper실행객체 얻기 
+		pstmt = con.prepareStatement(query);
+		
 		//6.Query를 DB의 테이블에 전송하여 실행하기
 		//->Statement객체의 executeQuery메소드 호출시...select구문을 전달하면...
-		//검색한 회원정보를 테이블형식으로 ResultSet이라는 임시 메모리 공간에 저장하여 반환받는다.
-		ResultSet rs = stmt.executeQuery(query);
+		//검색한 회원정보를 테이블형식으로
+		//ResultSet인터페이스의 자식객체인? OracleResultSetImpl 임시 메모리 공간에 저장하여 반환받는다.
+		ResultSet rs = pstmt.executeQuery();
 		
 		while(rs.next()) {	//검색할 줄이 존재할때까지 반복 
 			//7.select문일 경우 검색할 결과값 데이터들이 ResultSet일시 메모리 저장소에 저장되어 있기때문에 
@@ -92,7 +114,7 @@ public class MemberDAO {
 		
 		//자원해제~ 
 		con.close();
-		stmt.close();
+		pstmt.close();
 		rs.close();
 		
 		}catch(Exception e) {
