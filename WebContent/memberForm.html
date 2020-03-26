@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+<script type="text/javascript">
+	//회원가입 양식에서 입력을 제대로 했는지 유효성 검사를 하는 함수
+	//제대로 입력 했다면... 서블릿으로 우리가 입력한 새로운 회원정보를 전송(요청)하는 역할을 하는 함수!
+	function fn_sendMember() {
+
+		//자바스크립트 문법으로 <form>태그의 name속성값으로 <form>태그를 선택해서 가져와서 변수에 저장 
+		var frmMember = document.frmMember;
+		//아이디 입력 <input> 태그란에서 입력한 id값 얻기 
+		var id = frmMember.id.value;
+		//입력한 비밀번호 얻기 
+		var pwd = frmMember.pwd.value;
+		//입력한 이름 얻기 
+		var name = frmMember.name.value;
+		//입력한 이메일 얻기 
+		var email = frmMember.email.value;
+
+		//id를 입력했는지 판단  : 아이디를 입력하지 않았다면
+		if (id.length == 0 || id == "") {
+			alert("아이디입력은 필수입니다.");
+			//비밀번호를 입력하지 않았다면
+		} else if (pwd.length == 0 || pwd == "") {
+			alert("비밀번호 입력은 필수입니다.");
+			//이름 입력하지 않았다면
+		} else if (name.length == 0 || name == "") {
+			alert("이름 입력은 필수입니다.");
+			//이메일을 입력하지 않았다면
+		} else if (email.length == 0 || email == "") {
+			alert("이메일 입력은 필수입니다.");
+		} else {//모두 입력했다면 ~~~
+			//form 태그의 전송방식을 post로 설정 
+			frmMember.method = "post";
+			//form태그의 action속성값 (서블릿을 매핑할 주소값)을 member3로 설정 
+			frmMember.action = "member3";
+			//아래의 form태그를 이용해 서블릿으로 회원가입 요청을 전송함.
+			frmMember.submit();
+		}
+	}
+</script>
+</head>
+<body>
+
+
+	<form name="frmMember">
+		<table>
+			<th>회원 가입창</th>
+			<tr>
+				<td>아이디</td>
+				<td><input type="text" name="id"></td>
+				<!-- 입력한 ID를 서블릿으로 전송함. -->
+			</tr>
+			<tr>
+				<td>비밀번호</td>
+				<td><input type="password" name="pwd"></td>
+				<!-- 입력한 비밀번호를 서블릿으로 전송함. -->
+			</tr>
+			<tr>
+				<td>이름</td>
+				<td><input type="text" name="name"></td>
+				<!-- 입력한 이름을 서블릿으로 전송함. -->
+			</tr>
+			<tr>
+				<td>이메일</td>
+				<td><input type="text" name="email"></td>
+				<!-- 입력한 이메일을 서블릿으로 전송함. -->
+			</tr>
+		</table>
+
+		<input type="button" value="가입하기" onclick="fn_sendMember();">
+		<input type="reset" value="다시입력">
+
+		<!-- <input type="hidden">인 태그를 이용해 <input>태그 노출을 하지 않고
+			회원등록임을 알리는 addMember값만 서블릿으로 전송 -->
+		<input type="hidden" name="command" value="addMember">
+
+
+
+
+	</form>
+
+
+
+</body>
+</html>
