@@ -121,7 +121,7 @@ public class MemberDAO {
 			//DB연결작업 
 			con = dataFactory.getConnection();
 			
-			//입력한 회원정보! 즉 !! MemberVO객체에 저장된 변수값 얻기
+			//입력한 회원정보! 즉 !! MemberVO객체에 저장된 변수값 얻기 //?값에 설정하기 위해서 
 			String id = vo.getId(); //getter메소드 호출 
 			String pwd = vo.getPwd();
 			String name = vo.getName();
@@ -136,8 +136,8 @@ public class MemberDAO {
 		//?기호 4개에 대응되는 우리가 입력한 새로운 회원정보를 OraclePreparedStatementWrapper실행객체에 설정
 			pstmt.setString(1, id);
 			pstmt.setString(2, pwd);
-			pstmt.setString(2, name);
-			pstmt.setString(2, email);
+			pstmt.setString(3, name);
+			pstmt.setString(4, email);
 			
 			//OraclePreparedStatementWrapper 실행객체의 executeUpdate()메소드를 호출해 
 			//insert문장을 실행함 ( t_member 테이블에 새로운 회원정보 추가함) 
@@ -152,5 +152,32 @@ public class MemberDAO {
 			System.out.println("addMember메소드 내부에서 오류 : " + e);
 		}
 	}
+	
+	
+	//삭제 <a> 링크를 눌렀을때... 서블릿에서 전송해온 삭제할 회원 ID를 현재 delMember()메소드의 인자로 전달받아...
+	//DB에 저장된 회원정보를 삭제시키는 메소드
+	public void delMember(String id) {
+		try {
+			//커넥션풀(DataSource)로부터 커넥션 (Connection)객체 얻기 
+			con = dataFactory.getConnection();
+
+			//매개변수로 전달받는 삭제할 회원 id에 해당하는 레코드 삭제 DELETE구문 작성 
+			String query = "delete from t_member where id = ?";
+					
+			//?에 대응되는 값을 제외한 나머지 DELETE문자을 저장하고 있는 PreparedStatement인터페이스를 구현한 자식 객체 OraclePreparedStatementWrapper얻기 
+			pstmt = con.prepareStatement(query);
+			// ?에 대응되는 삭제할 회원 id값을 OraclePreparedStatementWrapper객체에 설정 
+			pstmt.setString(1, id);
+			//DELETE전체 문자을 DB에 전달하여 실행!
+			pstmt.executeUpdate();	//-> insert, update,delete 구문 실행 가능 -> 삭제 성공한 레코드 개수 반환함 ,삭제 실패하면 바로 catch문으로 빠짐 
+			//자원해제 
+			pstmt.close();
+			con.close();
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("delMember메소드 내부에서 오류 : " + e);
+		}
+	}//delMember()메소드 닫는 기호   
 
 }//MemberDAO 클래스 닫는 기호 
